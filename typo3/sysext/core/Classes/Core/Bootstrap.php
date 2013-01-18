@@ -134,6 +134,7 @@ class Bootstrap {
 			->initializeCachingFramework()
 			->registerAutoloader()
 			->checkUtf8DatabaseSettingsOrDie()
+			->initializeDatabaseFramework()
 			->transferDeprecatedCurlSettings()
 			->setCacheHashOptions()
 			->enforceCorrectProxyAuthScheme()
@@ -232,7 +233,6 @@ class Bootstrap {
 		define('TYPO3_db_password', $GLOBALS['TYPO3_CONF_VARS']['DB']['password']);
 		define('TYPO3_db_host', $GLOBALS['TYPO3_CONF_VARS']['DB']['host']);
 		define('TYPO3_extTableDef_script', $GLOBALS['TYPO3_CONF_VARS']['DB']['extTablesDefinitionScript']);
-		unset($GLOBALS['TYPO3_CONF_VARS']['DB']);
 		define('TYPO3_user_agent', 'User-Agent: ' . $GLOBALS['TYPO3_CONF_VARS']['HTTP']['userAgent']);
 		return $this;
 	}
@@ -949,6 +949,16 @@ class Bootstrap {
 	 */
 	public function initializeBackendTemplate() {
 		$GLOBALS['TBE_TEMPLATE'] = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Backend\\Template\\DocumentTemplate');
+		return $this;
+	}
+
+	/**
+	 * Initialize database framework
+	 *
+	 * @return \TYPO3\CMS\Core\Core\Bootstrap
+	 */
+	protected function initializeDatabaseFramework() {
+		\TYPO3\CMS\Core\Database\Database::initializeDatabaseFramework();
 		return $this;
 	}
 

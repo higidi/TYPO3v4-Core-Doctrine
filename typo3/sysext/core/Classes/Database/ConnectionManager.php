@@ -4,7 +4,8 @@ namespace TYPO3\CMS\Core\Database;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2012 Daniel Hürtgen <huertgen@rheinschafe.de>
+ *  (c) 2012-2013 Daniel Hürtgen <huertgen@rheinschafe.de>
+ *  (c) 2013 Alexander Schnitzler <alex.schnitzler@typovision.de>
  *  All rights reserved
  *
  *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -30,6 +31,7 @@ namespace TYPO3\CMS\Core\Database;
  * Handle all database connection driver used by typo3.
  *
  * @author Daniel Hürtgen <huertgen@rheinschafe.de>
+ * @author Alexander Schnitzler <alex.schnitzler@typovision.de>
  */
 class ConnectionManager implements ConnectionManagerInterface, \TYPO3\CMS\Core\SingletonInterface {
 
@@ -39,19 +41,87 @@ class ConnectionManager implements ConnectionManagerInterface, \TYPO3\CMS\Core\S
 	private $connections = array();
 
 	/**
+	 * @var array
+	 */
+	private $databaseConfigurations = array();
+
+	/**
 	 * @var string
 	 */
 	private $defaultConnectionName;
 
 	/**
-	 * Constructor.
-	 *
-	 * @param array $connections Array with dbal connection drivers
-	 * @param string $defaultConnectionName String with default connection name
+	 * @var \TYPO3\CMS\Core\Database\ConnectionFactory
 	 */
-	public function __construct(array $connections, $defaultConnectionName = 'default') {
-		$this->defaultConnectionName = $defaultConnectionName;
-		$this->connections = $connections;
+	protected $connectionFactory;
+
+	/**
+	 * @param \TYPO3\CMS\Core\Database\ConnectionFactory $connectionFactory
+	 */
+	public function injectConnectionFactory(\TYPO3\CMS\Core\Database\ConnectionFactory $connectionFactory) {
+		$this->connectionFactory = $connectionFactory;
+	}
+
+	/**
+	 * @param array $databaseConfigurations
+	 * @throws \InvalidArgumentException
+	 * @return void
+	 */
+	public function setDatabaseConfigurations(array $databaseConfigurations) {
+		unset($GLOBALS['TYPO3_CONF_VARS']['DB']);
+
+		// Fallback
+		if(empty($databaseConfigurations['connections'])) {
+			$databaseConfigurations['connections']['default'] = array(
+				'write' => array(
+					'dbname' => $databaseConfigurations['database'],
+					'driver' => 'pdo_mysql',
+					'host' => $databaseConfigurations['host'],
+					'password' => $databaseConfigurations['password'],
+					'user' => $databaseConfigurations['username'],
+					'charset' => 'utf-8',
+					'unix_socket',
+					'driverOptions' => array(),
+				)
+			);
+			$databaseConfigurations['connections']['default']['read'] = array($databaseConfigurations['connections']['default']['write']);
+			unset(
+				$databaseConfigurations['database'],
+				$databaseConfigurations['host'],
+				$databaseConfigurations['password'],
+				$databaseConfigurations['username']
+			);
+		}
+
+		foreach ($databaseConfigurations['connections'] as $identifier => $configuration) {
+			if (!is_array($configuration)) {
+				throw new \InvalidArgumentException('The database configuration for database "' . $identifier . '" was not an array as expected.', 1358510870);
+			}
+			$this->databaseConfigurations[$identifier] = $configuration;
+		}
+	}
+
+	/**
+	 * Instantiates all registered connections.
+	 *
+	 * @return void
+	 */
+	protected function createAllConnections() {
+		foreach (array_keys($this->databaseConfigurations) as $identifier) {
+			if (!isset($this->connections[$identifier])) {
+				$this->createConnection($identifier);
+			}
+		}
+	}
+
+	/**
+	 * Instantiates the connection for $identifier.
+	 *
+	 * @param string $identifier
+	 * @return void
+	 */
+	protected function createConnection($identifier) {
+		$this->connectionFactory->create($identifier);
 	}
 
 	/**
@@ -99,7 +169,6 @@ class ConnectionManager implements ConnectionManagerInterface, \TYPO3\CMS\Core\S
 	public function getConnectionNames() {
 		return array_keys($this->connections);
 	}
-
 }
 
 ?>
