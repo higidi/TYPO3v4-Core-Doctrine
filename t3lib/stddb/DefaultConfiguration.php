@@ -57,6 +57,9 @@ return array(
 		'TTFdpi' => 96,									// Integer: Enter how many dpi the FreeType module uses. Freetype1 should be set to 72. Freetype2 should be set to 96 (otherwise fonts are rendered way bigger than FreeType1). This works as a global scaling factor for Freetype.
 		'png_truecolor' => TRUE
 	),
+	'DB' => array(
+		'connections' => array()
+	),
 	'SYS' => array(
 		// System related concerning both frontend and backend.
 		'lang' => array(
