@@ -52,8 +52,9 @@ namespace TYPO3\CMS\Core\Database;
  * Eg. $GLOBALS['TYPO3_DB']->sql_fetch_assoc()
  *
  * @author Kasper Skårhøj <kasperYYYY@typo3.com>
+ * @deprecated
  */
-class DatabaseConnection extends \TYPO3\CMS\Core\Database\Connection\DefaultConnection {
+class DatabaseConnection extends \TYPO3\CMS\Core\Database\Legacy\LegacyDatabaseConnection {
 
 }
 
