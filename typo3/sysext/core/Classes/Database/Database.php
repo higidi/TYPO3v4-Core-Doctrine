@@ -5,6 +5,7 @@ namespace TYPO3\CMS\Core\Database;
  *  Copyright notice
  *
  *  (c) 2013 Alexander Schnitzler <alex.schnitzler@typovision.de>
+ *  (c) 2013 Daniel Hürtgen <huertgen@rheinschafe.de>
  *  All rights reserved
  *
  *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -27,6 +28,7 @@ namespace TYPO3\CMS\Core\Database;
  * A database handling helper class
  *
  * @author Alexander Schnitzler <alex.schnitzler@typovision.de>
+ * @author Daniel Hürtgen <huertgen@rheinschafe.de>
  */
 class Database {
 
@@ -36,7 +38,7 @@ class Database {
 	static protected $isDatabaseFrameworkInitialized = FALSE;
 
 	/**
-	 * Initializes the database framework by loading the cache manager and factory
+	 * Initializes the database framework by loading the database manager and factory
 	 * into the global context.
 	 *
 	 * @return void
@@ -47,7 +49,6 @@ class Database {
 			$GLOBALS['typo3DatabaseConnectionManager'] = new \TYPO3\CMS\Core\Database\ConnectionManager();
 			\TYPO3\CMS\Core\Utility\GeneralUtility::setSingletonInstance('TYPO3\\CMS\\Core\\Database\\ConnectionManager', $GLOBALS['typo3DatabaseConnectionManager']);
 			$GLOBALS['typo3DatabaseConnectionManager']->setDatabaseConfigurations($GLOBALS['TYPO3_CONF_VARS']['DB']);
-			// New operator used on purpose, makeInstance() is not ready to be used so early in bootstrap
 			$GLOBALS['typo3DatabaseConnectionFactory'] = new \TYPO3\CMS\Core\Database\ConnectionFactory('production', $GLOBALS['typo3DatabaseConnectionManager']);
 			\TYPO3\CMS\Core\Utility\GeneralUtility::setSingletonInstance('TYPO3\\CMS\\Core\\Database\\ConnectionFactory', $GLOBALS['typo3DatabaseConnectionFactory']);
 			self::$isDatabaseFrameworkInitialized = TRUE;
