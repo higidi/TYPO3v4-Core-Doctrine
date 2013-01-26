@@ -286,8 +286,8 @@ class Bootstrap {
 	 * @return \TYPO3\CMS\Core\Core\Bootstrap
 	 */
 	protected function registerAutoloader() {
-		/** Composer loader */
-		require_once PATH_typo3 . '/contrib/autoload.php';
+		// @TODO best place? maybe swap out & use own class loader
+		require_once PATH_typo3 . 'contrib/doctrine/autoload.php';
 
 		if (PHP_VERSION_ID < 50307) {
 			\TYPO3\CMS\Core\Compatibility\CompatbilityClassLoaderPhpBelow50307::registerAutoloader();

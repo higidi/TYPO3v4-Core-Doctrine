@@ -16,3 +16,9 @@
 [submodule "typo3/sysext/linkvalidator"]
 	path = typo3/sysext/linkvalidator
 	url = git://git.typo3.org/TYPO3v4/Extensions/linkvalidator.git
+[submodule "typo3/contrib/doctrine/dbal"]
+	path = typo3/contrib/doctrine/dbal
+	url = git://github.com/doctrine/dbal.git
+[submodule "typo3/contrib/doctrine/common"]
+	path = typo3/contrib/doctrine/common
+	url = git://github.com/doctrine/common.git
