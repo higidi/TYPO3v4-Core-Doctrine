@@ -653,10 +653,11 @@ class Bootstrap {
 	 * @param boolean $connect Whether db should be connected
 	 * @return \TYPO3\CMS\Core\Core\Bootstrap
 	 * @internal This is not a public API method, do not use in own extensions
+	 * @deprecatd since TYPO3 6.1, use $GLOBALS['typo3ConnectionManager']->getConnection() instead. Will be removed in TYPO3 6.3
 	 */
 	public function initializeTypo3DbGlobal($connect = TRUE) {
 		/** @var TYPO3_DB TYPO3\CMS\Core\Database\DatabaseConnection */
-		$GLOBALS['TYPO3_DB'] = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Database\\DatabaseConnection');
+		$GLOBALS['TYPO3_DB'] = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Database\\Legacy\\LegacyDatabaseConnection');
 		$GLOBALS['TYPO3_DB']->debugOutput = $GLOBALS['TYPO3_CONF_VARS']['SYS']['sqlDebug'];
 		if ($connect) {
 			$this->establishDatabaseConnection();
@@ -963,6 +964,5 @@ class Bootstrap {
 	}
 
 }
-
 
 ?>
