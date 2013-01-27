@@ -49,6 +49,7 @@ class Database {
 			$GLOBALS['typo3DatabaseConnectionManager'] = new \TYPO3\CMS\Core\Database\ConnectionManager();
 			\TYPO3\CMS\Core\Utility\GeneralUtility::setSingletonInstance('TYPO3\\CMS\\Core\\Database\\ConnectionManager', $GLOBALS['typo3DatabaseConnectionManager']);
 			$GLOBALS['typo3DatabaseConnectionManager']->setConnectionConfigurations($GLOBALS['TYPO3_CONF_VARS']['DB']['connections']);
+			$GLOBALS['typo3DatabaseConnectionManager']->setConnectionPoolConfigurations($GLOBALS['TYPO3_CONF_VARS']['DB']['pools']);
 			unset($GLOBALS['TYPO3_CONF_VARS']['DB']);
 
 			$GLOBALS['typo3DatabaseConnectionFactory'] = new \TYPO3\CMS\Core\Database\ConnectionFactory('production', $GLOBALS['typo3DatabaseConnectionManager']);

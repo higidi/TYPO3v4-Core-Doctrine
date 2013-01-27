@@ -42,11 +42,25 @@ class ConnectionManager implements ConnectionManagerInterface, \TYPO3\CMS\Core\S
 	private $connections = array();
 
 	/**
+	 * Holds all connection pools.
+	 *
+	 * @var array
+	 */
+	private $connectionPools = array();
+
+	/**
 	 * Holds an array with all connection configurations.
 	 *
 	 * @var array
 	 */
 	private $connectionConfigurations = array();
+
+	/**
+	 * Holds an array with all connection-pool configurations.
+	 *
+	 * @var array
+	 */
+	private $connectionPoolConfigurations = array();
 
 	/**
 	 * @var string
@@ -120,6 +134,63 @@ class ConnectionManager implements ConnectionManagerInterface, \TYPO3\CMS\Core\S
 	 */
 	public function hasConnectionConfiguration($identifier) {
 		return array_key_exists($identifier, $this->connectionConfigurations) ? TRUE : FALSE;
+	}
+
+	/**
+	 * Set array with connection pool configurations.
+	 *
+	 * @param array $connectionPoolConfigurations Array of $name to $poolConfigurations.
+	 * @throws \InvalidArgumentException
+	 * @return void
+	 */
+	public function setConnectionPoolConfigurations(array $connectionPoolConfigurations) {
+		foreach ($connectionPoolConfigurations as $name => $poolConfiguration) {
+			if (!is_array($poolConfiguration)) {
+				throw new \InvalidArgumentException('The database connection pool configuration for pool "' . $name . '" was not an array as expected.', 1359247408);
+			}
+			$this->setConnectionPoolConfiguration($name, $poolConfiguration);
+		}
+	}
+
+	/**
+	 * Sets connection pool configuration for pool name.
+	 *
+	 * @param string $name       Unique connection pool name
+	 * @param array  $configuration     Array with connection pool configuration
+	 * @throws \InvalidArgumentException
+	 * @return void
+	 */
+	public function setConnectionPoolConfiguration($name, array $configuration) {
+		$this->connectionPoolConfigurations[$name] = $configuration;
+	}
+
+	/**
+	 * Gets all connection pool configurations.
+	 *
+	 * @return array An array with all connection pool configurations.
+	 */
+	public function getConnectionPoolConfigurations() {
+		return $this->connectionPoolConfigurations;
+	}
+
+	/**
+	 * Get connection pool configuraiton by name.
+	 *
+	 * @param string $name Unique connection pool name
+	 * @return null|array NULL if configuraiton not exists, otherwise an array with connection params.
+	 */
+	public function getConnectionPoolConfiguration($name) {
+		return $this->hasConnectionPoolConfiguration($name) ? $this->connectionPoolConfigurations[$name] : NULL;
+	}
+
+	/**
+	 * Checks wheater a connection pool configuration by given identifier exists.
+	 *
+	 * @param string $name Unique connection pool name
+	 * @return boolean
+	 */
+	public function hasConnectionPoolConfiguration($name) {
+		return array_key_exists($name, $this->connectionConfigurations) ? TRUE : FALSE;
 	}
 
 	/**

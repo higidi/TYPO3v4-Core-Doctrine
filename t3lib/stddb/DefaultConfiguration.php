@@ -58,7 +58,8 @@ return array(
 		'png_truecolor' => TRUE
 	),
 	'DB' => array(
-		'connections' => array()
+		'connections' => array(),
+		'pools' => array(),
 	),
 	'SYS' => array(
 		// System related concerning both frontend and backend.
