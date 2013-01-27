@@ -42,9 +42,11 @@ class ConnectionManager implements ConnectionManagerInterface, \TYPO3\CMS\Core\S
 	private $connections = array();
 
 	/**
+	 * Holds an array with all connection configurations.
+	 *
 	 * @var array
 	 */
-	private $databaseConfigurations = array();
+	private $connectionConfigurations = array();
 
 	/**
 	 * @var string
@@ -64,55 +66,60 @@ class ConnectionManager implements ConnectionManagerInterface, \TYPO3\CMS\Core\S
 	}
 
 	/**
-	 * @param array $databaseConfigurations
+	 * Set array with connection configurations.
+	 *
+	 * @param array $connectionConfigurations Array of $identifier to $params configurations.
 	 * @throws \InvalidArgumentException
 	 * @return void
 	 */
-	public function setDatabaseConfigurations(array $databaseConfigurations) {
-		unset($GLOBALS['TYPO3_CONF_VARS']['DB']);
-
-		// Fallback
-		if(empty($databaseConfigurations['connections'])) {
-			$databaseConfigurations['connections']['default'] = array(
-				'write' => array(
-					'dbname' => $databaseConfigurations['database'],
-					'driver' => 'pdo_mysql',
-					'host' => $databaseConfigurations['host'],
-					'password' => $databaseConfigurations['password'],
-					'user' => $databaseConfigurations['username'],
-					'charset' => 'utf-8',
-					'unix_socket',
-					'driverOptions' => array(),
-				)
-			);
-			$databaseConfigurations['connections']['default']['read'] = array($databaseConfigurations['connections']['default']['write']);
-			unset(
-				$databaseConfigurations['database'],
-				$databaseConfigurations['host'],
-				$databaseConfigurations['password'],
-				$databaseConfigurations['username']
-			);
-		}
-
-		foreach ($databaseConfigurations['connections'] as $identifier => $configuration) {
-			if (!is_array($configuration)) {
-				throw new \InvalidArgumentException('The database configuration for database "' . $identifier . '" was not an array as expected.', 1358510870);
+	public function setConnectionConfigurations(array $connectionConfigurations) {
+		foreach ($connectionConfigurations as $identifier => $params) {
+			if (!is_array($params)) {
+				throw new \InvalidArgumentException('The database connection configuration for database "' . $identifier . '" was not an array as expected.', 1358510870);
 			}
-			$this->databaseConfigurations[$identifier] = $configuration;
+			$this->setConnectionConfiguration($identifier, $params);
 		}
 	}
 
 	/**
-	 * Instantiates all registered connections.
+	 * Sets connection params for identifier.
 	 *
+	 * @param string $identifier Unique connection identifier
+	 * @param array  $params     Array with connection params
+	 * @throws \InvalidArgumentException
 	 * @return void
 	 */
-	protected function createAllConnections() {
-		foreach (array_keys($this->databaseConfigurations) as $identifier) {
-			if (!isset($this->connections[$identifier])) {
-				$this->createConnection($identifier);
-			}
-		}
+	public function setConnectionConfiguration($identifier, array $params) {
+		$this->connectionConfigurations[$identifier] = $params;
+	}
+
+	/**
+	 * Gets all connection configurations.
+	 *
+	 * @return array An array with all connection configurations.
+	 */
+	public function getConnectionConfigurations() {
+		return $this->connectionConfigurations;
+	}
+
+	/**
+	 * Get connection configuraiton by identifier.
+	 *
+	 * @param string $identifier Unique connection identifier
+	 * @return null|array NULL if configuraiton not exists, otherwise an array with connection params.
+	 */
+	public function getConnectionConfiguration($identifier) {
+		return $this->hasConnectionConfiguration($identifier) ? $this->connectionConfigurations[$identifier] : NULL;
+	}
+
+	/**
+	 * Checks wheater a connection configuration by given identifier exists.
+	 *
+	 * @param string $identifier Unique connection identifier
+	 * @return boolean
+	 */
+	public function hasConnectionConfiguration($identifier) {
+		return array_key_exists($identifier, $this->connectionConfigurations) ? TRUE : FALSE;
 	}
 
 	/**

@@ -48,7 +48,9 @@ class Database {
 			// New operator used on purpose, makeInstance() is not ready to be used so early in bootstrap
 			$GLOBALS['typo3DatabaseConnectionManager'] = new \TYPO3\CMS\Core\Database\ConnectionManager();
 			\TYPO3\CMS\Core\Utility\GeneralUtility::setSingletonInstance('TYPO3\\CMS\\Core\\Database\\ConnectionManager', $GLOBALS['typo3DatabaseConnectionManager']);
-			$GLOBALS['typo3DatabaseConnectionManager']->setDatabaseConfigurations($GLOBALS['TYPO3_CONF_VARS']['DB']);
+			$GLOBALS['typo3DatabaseConnectionManager']->setConnectionConfigurations($GLOBALS['TYPO3_CONF_VARS']['DB']['connections']);
+			unset($GLOBALS['TYPO3_CONF_VARS']['DB']);
+
 			$GLOBALS['typo3DatabaseConnectionFactory'] = new \TYPO3\CMS\Core\Database\ConnectionFactory('production', $GLOBALS['typo3DatabaseConnectionManager']);
 			\TYPO3\CMS\Core\Utility\GeneralUtility::setSingletonInstance('TYPO3\\CMS\\Core\\Database\\ConnectionFactory', $GLOBALS['typo3DatabaseConnectionFactory']);
 			self::$isDatabaseFrameworkInitialized = TRUE;
