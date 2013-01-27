@@ -33,6 +33,7 @@ namespace TYPO3\CMS\Core\Database;
  * @author Daniel Hürtgen <huertgen@rheinschafe.de>
  * @author Alexander Schnitzler <alex.schnitzler@typovision.de>
  * @scope singleton
+ * @api
  */
 class ConnectionManager implements ConnectionManagerInterface, \TYPO3\CMS\Core\SingletonInterface {
 
@@ -159,7 +160,7 @@ class ConnectionManager implements ConnectionManagerInterface, \TYPO3\CMS\Core\S
 	/**
 	 * Sets connection pool configuration for pool name.
 	 *
-	 * @param string $name       Unique connection pool name
+	 * @param string $name              Unique connection pool name
 	 * @param array  $configuration     Array with connection pool configuration
 	 * @throws \InvalidArgumentException
 	 * @return void
