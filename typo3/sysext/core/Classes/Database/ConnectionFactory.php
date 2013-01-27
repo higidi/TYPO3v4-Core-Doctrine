@@ -5,6 +5,7 @@ namespace TYPO3\CMS\Core\Database;
  *  Copyright notice
  *
  *  (c) 2013 Alexander Schnitzler <alex.schnitzler@typovision.de>
+ *  (c) 2013 Daniel Hürtgen <huertgen@rheinschafe.de>
  *  All rights reserved
  *
  *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -24,17 +25,23 @@ namespace TYPO3\CMS\Core\Database;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 /**
- * This cache factory takes care of instantiating a cache frontend and injecting
- * a certain cache backend. After creation of the new cache, the cache object
- * is registered at the cache manager.
+ * This database factory takes care of instantiating a database connection.
+ * After creation of the new connection, the connection will be registered
+ * at the connection manager.
  *
  * This file is a backport from FLOW3
  *
  * @author Alexander Schnitzler <alex.schnitzler@typovision.de>
+ * @author Daniel Hürtgen <huertgen@rheinschafe.de>
  * @scope singleton
  * @api
  */
 class ConnectionFactory implements \TYPO3\CMS\Core\SingletonInterface {
+
+	/**
+	 * Constant contains default connection wrapper class name.
+	 */
+	const DEFAULT_CONNECTION_WRAPPER_CLASS = 'TYPO3\\CMS\\Core\\Database\\Connection';
 
 	/**
 	 * The current FLOW3 context ("production", "development" etc.)
@@ -54,9 +61,9 @@ class ConnectionFactory implements \TYPO3\CMS\Core\SingletonInterface {
 	protected $connectionManager;
 
 	/**
-	 * Constructs this cache factory
+	 * Constructs this database factory.
 	 *
-	 * @param string $context The current FLOW3 context
+	 * @param string                                     $context           The current FLOW3 context
 	 * @param \TYPO3\CMS\Core\Database\ConnectionManager $connectionManager The connection manager
 	 */
 	public function __construct($context, \TYPO3\CMS\Core\Database\ConnectionManager $connectionManager) {
@@ -66,7 +73,11 @@ class ConnectionFactory implements \TYPO3\CMS\Core\SingletonInterface {
 	}
 
 	/**
+	 * Creates new database connection.
+	 *
 	 * @param string $identifier
+	 * @throws \InvalidArgumentException
+	 * @return \TYPO3\CMS\Core\Database\Connection
 	 */
 	public function create($identifier) {
 		// Not yet implemented
