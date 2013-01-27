@@ -32,6 +32,7 @@ namespace TYPO3\CMS\Core\Database;
  *
  * @author Daniel Hürtgen <huertgen@rheinschafe.de>
  * @author Alexander Schnitzler <alex.schnitzler@typovision.de>
+ * @scope singleton
  */
 class ConnectionManager implements ConnectionManagerInterface, \TYPO3\CMS\Core\SingletonInterface {
 
