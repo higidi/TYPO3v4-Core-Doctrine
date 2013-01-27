@@ -37,6 +37,8 @@ namespace TYPO3\CMS\Core\Database;
 class ConnectionManager implements ConnectionManagerInterface, \TYPO3\CMS\Core\SingletonInterface {
 
 	/**
+	 * Holds all connections.
+	 *
 	 * @var array
 	 */
 	private $connections = array();
@@ -63,6 +65,8 @@ class ConnectionManager implements ConnectionManagerInterface, \TYPO3\CMS\Core\S
 	private $connectionPoolConfigurations = array();
 
 	/**
+	 * Connection identifer used as default connection (fallback).
+	 *
 	 * @var string
 	 */
 	private $defaultConnectionName;
